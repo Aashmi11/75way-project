@@ -1,45 +1,61 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import { styled, Box, TextareaAutosize, Button, InputBase, FormControl  } from '@mui/material';
-import { AddCircle as Add } from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { styled, Box, TextareaAutosize, Button, InputBase } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import { API } from '../../service/api';
 import { DataContext } from '../../context/DataProvider';
 
-const Container = styled(Box)(({ theme }) => ({
-    margin: '50px 100px',
-    [theme.breakpoints.down('md')]: {
-        margin: 0
-    }
-}));
+const Container = styled(Box)`
+    max-width: 820px;
+    margin: 60px auto;
+    padding: 0 24px;
+`;
 
-const Image = styled('img')({
-    width: '100%',
-    height: '50vh',
-    objectFit: 'cover'
-});
-
-const StyledFormControl = styled(FormControl)`
-    margin-top: 10px;
+const Header = styled(Box)`
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
 `;
 
-const InputTextField = styled(InputBase)`
-    flex: 1;
-    margin: 0 30px;
-    font-size: 25px;
+const PageTitle = styled('h2')`
+    font-size: 24px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
 `;
 
-const Textarea = styled(TextareaAutosize)`
+const PublishButton = styled(Button)`
+    text-transform: none;
+    background: #0f172a;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    &:hover { background: #1e293b; }
+`;
+
+const TitleInput = styled(InputBase)`
+    width: 100%;
+    font-size: 32px;
+    font-weight: 600;
+    color: #0f172a;
+    padding: 16px 0;
+    border-bottom: 1px solid #e2e8f0;
+`;
+
+const BodyArea = styled(TextareaAutosize)`
     width: 100%;
     border: none;
-    margin-top: 50px;
-    font-size: 18px;
-    &:focus-visible {
-        outline: none;
-    }
+    margin-top: 24px;
+    font-size: 17px;
+    font-family: inherit;
+    line-height: 1.7;
+    color: #334155;
+    resize: vertical;
+    min-height: 240px;
+    &:focus-visible { outline: none; }
 `;
 
 const initialPost = {
@@ -47,71 +63,52 @@ const initialPost = {
     description: '',
     picture: '',
     username: '',
-    categories: '',
+    categories: 'All',
     createdDate: new Date()
-}
+};
 
 const CreatePost = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-
     const [post, setPost] = useState(initialPost);
-    const [file, setFile] = useState('');
     const { account } = useContext(DataContext);
 
-    const url = post.picture ? post.picture : 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
-    
     useEffect(() => {
-        const getImage = async () => { 
-            if(file) {
-                const data = new FormData();
-                data.append("name", file.name);
-                data.append("file", file);
-                
-                const response = await API.uploadFile(data);
-                post.picture = response.data;
-            }
-        }
-        getImage();
-        post.categories = location.search?.split('=')[1] || 'All';
-        post.username = account.username;
-    }, [file])
+        setPost(prev => ({ ...prev, username: account.username }));
+    }, [account.username]);
 
     const savePost = async () => {
+        if (!post.title.trim()) return;
         await API.createPost(post);
         navigate('/');
-    }
+    };
 
     const handleChange = (e) => {
         setPost({ ...post, [e.target.name]: e.target.value });
-    }
+    };
 
     return (
         <Container>
-            <Image src={url} alt="post" />
-
-            <StyledFormControl>
-                <label htmlFor="fileInput">
-                    <Add fontSize="large" color="action" />
-                </label>
-                <input
-                    type="file"
-                    id="fileInput"
-                    style={{ display: "none" }}
-                    onChange={(e) => setFile(e.target.files[0])}
-                />
-                <InputTextField onChange={(e) => handleChange(e)} name='title' placeholder="Title" />
-                <Button onClick={() => savePost()} variant="contained" color="primary">Publish</Button>
-            </StyledFormControl>
-
-            <Textarea
-                rowsMin={5}
+            <Header>
+                <PageTitle>Write a new post</PageTitle>
+                <PublishButton onClick={savePost} variant="contained" disableElevation>
+                    Publish
+                </PublishButton>
+            </Header>
+            <TitleInput
+                onChange={handleChange}
+                name="title"
+                placeholder="Title"
+                value={post.title}
+            />
+            <BodyArea
+                minRows={10}
                 placeholder="Tell your story..."
-                name='description'
-                onChange={(e) => handleChange(e)} 
+                name="description"
+                onChange={handleChange}
+                value={post.description}
             />
         </Container>
-    )
-}
+    );
+};
 
 export default CreatePost;

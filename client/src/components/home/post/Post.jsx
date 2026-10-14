@@ -1,57 +1,59 @@
-
 import { styled, Box, Typography } from '@mui/material';
 
 const Container = styled(Box)`
-    border: 1px solid #d3cede;
-    border-radius: 10px;
-    margin: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    background: #fff;
+    height: 220px;
     display: flex;
-    align-items: center;
     flex-direction: column;
-    height: 350px;
-    & > img, & > p {
-        padding: 0 5px 5px 5px;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    &:hover {
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+        transform: translateY(-2px);
+        border-color: #cbd5e1;
     }
 `;
 
-const Image = styled('img')({
-    width: '100%',
-    objectFit: 'cover',
-    borderRadius: '10px 10px 0 0',
-    height: 150
-});
-
-const Text = styled(Typography)`
-    color: #878787
-    font-size: 12px;
-`;
-
 const Heading = styled(Typography)`
-    font-size: 18px;
-    font-weight: 600
+    font-size: 20px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.3;
 `;
 
 const Details = styled(Typography)`
     font-size: 14px;
-    word-break: break-word;
+    color: #475569;
+    line-height: 1.5;
+    margin-top: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 `;
 
-const Post = ({ post }) => {
-    const url = post.picture ? post.picture : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80';
-    
-    const addEllipsis = (str, limit) => {
-        return str.length > limit ? str.substring(0, limit) + '...' : str;
-    } 
+const Author = styled(Typography)`
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 16px;
+`;
 
-    return (
-        <Container>
-            <Image src={url} alt="post" />
-            <Text>{post.categories}</Text>
-            <Heading>{addEllipsis(post.title, 20)}</Heading>
-            <Text>Author: {post.username}</Text>
-            <Details>{addEllipsis(post.description, 100)}</Details>
-        </Container>
-    )
-}
+const addEllipsis = (str, limit) =>
+    str && str.length > limit ? str.substring(0, limit) + '…' : str || '';
+
+const Post = ({ post }) => (
+    <Container>
+        <Box>
+            <Heading>{addEllipsis(post.title, 50)}</Heading>
+            <Details>{post.description}</Details>
+        </Box>
+        <Author>By {post.username}</Author>
+    </Container>
+);
 
 export default Post;
