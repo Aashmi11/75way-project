@@ -1,55 +1,59 @@
+import { Box, styled, Typography } from '@mui/material';
 
-import { Box, styled, Typography, Link } from '@mui/material';
-import { GitHub, Instagram, Email } from '@mui/icons-material';
-
-const Banner = styled(Box)`
-    background-image: url(https://www.wallpapertip.com/wmimgs/23-236943_us-wallpaper-for-website.jpg);
+const Hero = styled(Box)`
     width: 100%;
-    height: 50vh;
-    background-position: left 0px bottom 0px;
-    background-size: cover;
+    height: 32vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #334155 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+`;
+
+const HeroTitle = styled(Typography)`
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 1px;
 `;
 
 const Wrapper = styled(Box)`
-    padding: 20px;
-    & > h3, & > h5 {
-        margin-top: 50px;
-    }
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+`;
+
+const Heading = styled(Typography)`
+    font-size: 28px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 24px;
 `;
 
 const Text = styled(Typography)`
-    color: #878787;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #475569;
+    margin-bottom: 20px;
 `;
 
-const About = () => {
-
-    return (
-        <Box>
-            <Banner/>
-            <Wrapper>
-                <Typography variant="h3">Code for Interview</Typography>
-                <Text variant="h5">I'm a Software Engineer based in India. 
-                    I've built websites, desktop applications and corporate software.<br />
-                    If you are interested, you can view some of my favorite projects here
-                    <Box component="span" style={{ marginLeft: 5 }}>
-                        <Link href="https://github.com/kunaltyagi9" color="inherit" target="_blank"><GitHub /></Link>
-                    </Box>
-                </Text>
-                <Text variant="h5">
-                    Need something built or simply want to have chat? Reach out to me on
-                    <Box component="span" style={{ marginLeft: 5 }}>
-                        <Link href="https://www.instagram.com/codeforinterview/" color="inherit" target="_blank">
-                            <Instagram />
-                        </Link>
-                    </Box>  
-                        or send me an Email 
-                        <Link href="mailto:codeforinterview@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
-                            <Email />
-                        </Link>.
-                </Text>
-            </Wrapper>
-        </Box>
-    )
-}
+const About = () => (
+    <Box>
+        <Hero>
+            <HeroTitle>About</HeroTitle>
+        </Hero>
+        <Wrapper>
+            <Heading>A place for stories & ideas</Heading>
+            <Text>
+                This blog is a space to share thoughts, long-form writing, and
+                anything worth saying slowly. No feeds, no algorithms — just posts
+                you can read, comment on, and come back to.
+            </Text>
+            <Text>
+                Writers publish, readers respond, and conversations happen in the
+                open. Simple as that.
+            </Text>
+        </Wrapper>
+    </Box>
+);
 
 export default About;
